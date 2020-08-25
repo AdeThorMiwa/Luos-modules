@@ -21,6 +21,8 @@ uint16_t temperature[MAX_VM_NUMBER] = {0};
 
 volatile char publish = 0;
 
+static int motor_detection = 0;
+
 int find_id(module_t *module)
 {
 
@@ -35,6 +37,11 @@ int find_id(module_t *module)
 
 void rx_dxl_cb(module_t *module, msg_t *msg)
 {
+    if (motor_detection) 
+    {
+        return;
+    }
+
     static unsigned char last = 0;
 
     if (msg->header.cmd == REGISTER)
@@ -270,7 +277,10 @@ void dxl_init(void)
 {
     servo_init(1000000);
     HAL_Delay(500);
+
+    motor_detection = 1;
     discover_dxl();
+    motor_detection = 0;
 }
 
 void dxl_request_manager(void)
