@@ -235,6 +235,8 @@ void rx_dxl_cb(module_t *module, msg_t *msg)
 
 void discover_dxl(void)
 {
+    motor_detection = 1;
+
     status_led(1);
     int y = 0;
     char my_string[15];
@@ -264,6 +266,7 @@ void discover_dxl(void)
             y++;
         }
     }
+
     if (y == 0)
     {
         // there is no motor detected, create a Void module to only manage l0 things
@@ -271,6 +274,7 @@ void discover_dxl(void)
         luos_module_enable_rt(my_module[y]);
     }
     status_led(0);
+    motor_detection = 0;
 }
 
 void dxl_init(void)
@@ -278,9 +282,7 @@ void dxl_init(void)
     servo_init(1000000);
     HAL_Delay(500);
 
-    motor_detection = 1;
     discover_dxl();
-    motor_detection = 0;
 }
 
 void dxl_request_manager(void)
