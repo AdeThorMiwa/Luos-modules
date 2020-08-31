@@ -258,8 +258,11 @@ void discover_dxl(void)
             luos_module_enable_rt(my_module[y]);
             dxl_table[y] = i;
 
-            servo_get_raw_word(i, SERVO_REGISTER_MODEL_NUMBER, (uint16_t *)&dxl_model[y], DXL_SAFE_TIMEOUT);
-            // put a delay on motor response
+            while (servo_get_raw_word(i, SERVO_REGISTER_MODEL_NUMBER, (uint16_t *)&dxl_model[y], DXL_TIMEOUT)) 
+            {
+                HAL_Delay(10);
+            }
+                        // put a delay on motor response
             servo_set_raw_byte(i, SERVO_REGISTER_RETURN_DELAY_TIME, 10, DXL_SAFE_TIMEOUT);
             // set limit temperature to 55°C
             servo_set_raw_byte(i, SERVO_REGISTER_MAX_TEMPERATURE, 55, DXL_SAFE_TIMEOUT);
