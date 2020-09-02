@@ -263,9 +263,9 @@ void discover_dxl(void)
                 HAL_Delay(10);
             }
                         // put a delay on motor response
-            servo_set_raw_byte(i, SERVO_REGISTER_RETURN_DELAY_TIME, 10, DXL_SAFE_TIMEOUT);
+            servo_set_raw_byte(i, SERVO_REGISTER_RETURN_DELAY_TIME, 10, DXL_TIMEOUT);
             // set limit temperature to 55°C
-            servo_set_raw_byte(i, SERVO_REGISTER_MAX_TEMPERATURE, 55, DXL_SAFE_TIMEOUT);
+            servo_set_raw_byte(i, SERVO_REGISTER_MAX_TEMPERATURE, 55, DXL_TIMEOUT);
             y++;
         }
     }
