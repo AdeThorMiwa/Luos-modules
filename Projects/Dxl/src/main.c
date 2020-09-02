@@ -105,9 +105,9 @@ int main(void)
   /* USER CODE BEGIN 2 */
   luos_init();
   dxl_init();
-  #ifdef FAN
+#ifdef FAN
   fan_init();
-  #endif
+#endif
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -116,6 +116,7 @@ int main(void)
   {
     luos_loop();
     dxl_loop();
+
     #ifdef FAN
     fan_loop();
     #endif
