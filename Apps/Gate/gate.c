@@ -2,6 +2,13 @@
 #include "gate.h"
 #include "sensor.h"
 #include "gate_msg.h"
+#include "luos_board.h"
+
+#ifdef LEFT_ARM
+uint8_t DXL_IDS[NB_DXL] = {20, 21, 22, 23, 24, 25, 26, 27};
+#else
+uint8_t DXL_IDS[NB_DXL] = {10, 11, 12, 13, 14, 15, 16, 17};
+#endif
 
 #define SENSOR_POLL_PERIOD 1 // (in ms)
 #define SERIAL_PRINT_POS_PERIOD 8 // (in ms)
@@ -104,6 +111,17 @@ void msg_cb(module_t *module, msg_t *msg)
             if (msg->header.size == sizeof(float))
             {
                 memcpy((float *)&present_temperatures[dxl_id], msg->data, msg->header.size);
+            }
+            break;
+
+        case GRAVITY_VECTOR:
+            if (msg->header.size == sizeof(int))
+            {
+                int nb_dxl_pos;
+                memcpy(&nb_dxl_pos, msg->data, msg->header.size);
+
+                sprintf((char *)send_buff, "%d ----", nb_dxl_pos);
+                serial_write(send_buff, SEND_BUFF_SIZE); 
             }
             break;
 
@@ -242,22 +260,22 @@ void gate_loop(void)
             poll_dxl_id = get_next_dxl(poll_dxl_id);
             if (poll_dxl_id != 0) 
             {
-                collect_data(my_module, poll_dxl_id);
+                // collect_data(my_module, poll_dxl_id);
                 last_sensor_poll = HAL_GetTick();
             }
         }
 
         if ((t - last_serial_print_pos) >= SERIAL_PRINT_POS_PERIOD)
         {
-            make_present_pos_msg((char *)send_buff, SEND_BUFF_SIZE, (float *)present_positions, NB_DXL);
-            serial_write(send_buff, SEND_BUFF_SIZE); 
+            // make_present_pos_msg((char *)send_buff, SEND_BUFF_SIZE, (float *)present_positions, NB_DXL);
+            // serial_write(send_buff, SEND_BUFF_SIZE); 
             last_serial_print_pos = HAL_GetTick();
         }
 
         if ((t - last_serial_print_temp) >= SERIAL_PRINT_TEMP_PERIOD)
         {
-            make_present_temp_msg((char *)send_buff, SEND_BUFF_SIZE, (float *)present_temperatures, NB_DXL);
-            serial_write(send_buff, SEND_BUFF_SIZE); 
+            // make_present_temp_msg((char *)send_buff, SEND_BUFF_SIZE, (float *)present_temperatures, NB_DXL);
+            // serial_write(send_buff, SEND_BUFF_SIZE); 
             last_serial_print_temp = HAL_GetTick();
         }
     }

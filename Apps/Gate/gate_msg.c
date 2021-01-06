@@ -11,6 +11,7 @@ uint8_t module_id_for_dxl_id(uint8_t dxl_id)
         }
     }
     assert(0);
+    return 255;
 }
 
 void make_present_pos_msg(char *buff, uint8_t buff_size, float *positions, uint8_t nb_dxl) 
